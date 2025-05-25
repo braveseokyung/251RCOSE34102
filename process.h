@@ -9,6 +9,7 @@ typedef struct {
     int pid;
     int arrival_time;
     int cpu_burst_time;
+    int remaining_time;
     int io_burst_time;
     int io_request_time;
     int priority;

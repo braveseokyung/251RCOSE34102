@@ -14,7 +14,8 @@ int main() {
 
     // fcfs(processes,NUM_PROCESS);
     // nonpre_sjf(processes,NUM_PROCESS);
-    nonpre_priority(processes,NUM_PROCESS);
+    // nonpre_priority(processes,NUM_PROCESS);
+    pre_sjf(processes, NUM_PROCESS);
     // init_queue(&ready_queue);
 
     // for (int i=0; i < 5; i++) {
