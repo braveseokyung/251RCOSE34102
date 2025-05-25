@@ -3,6 +3,7 @@
 #include <string.h>
 #include "scheduler.h"
 #include "constants.h"
+#include "evaluation.h"
 
 int compare_by_arrival(const void *a, const void *b){
     
@@ -113,5 +114,8 @@ void nonpre_sjf(Process *processes, int num_process) {
         printf("PID %d (%d~%d) | ", processes_executed[i]->pid, processes_executed[i]->start_time, processes_executed[i]->complete_time);
     }
     printf("\n");
+
+    // 성능 분석
+    evaluate(processes_copy, num_process, "Non-preemptive SJF");
 
 }
