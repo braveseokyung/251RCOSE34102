@@ -10,8 +10,8 @@ typedef struct {
     int arrival_time;
     int cpu_burst_time;
     int remaining_time;
+    int io_start_time;
     int io_burst_time;
-    int io_request_time;
     int priority;
     // int time_quantum;
 

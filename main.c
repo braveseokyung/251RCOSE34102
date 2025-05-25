@@ -10,13 +10,13 @@ int main() {
     Process processes[MAX_PROCESS];
     Queue ready_queue;
 
-    create_process(processes, NUM_PROCESS, 42);
+    create_process(processes, NUM_PROCESS, 3);
 
-    // fcfs(processes,NUM_PROCESS);
-    // nonpre_sjf(processes,NUM_PROCESS);
-    // nonpre_priority(processes,NUM_PROCESS);
-    // pre_sjf(processes, NUM_PROCESS);
-    // pre_priority(processes, NUM_PROCESS);
+    fcfs(processes,NUM_PROCESS);
+    nonpre_sjf(processes,NUM_PROCESS);
+    nonpre_priority(processes,NUM_PROCESS);
+    pre_sjf(processes, NUM_PROCESS);
+    pre_priority(processes, NUM_PROCESS);
     round_robin(processes, NUM_PROCESS);
     // init_queue(&ready_queue);
 

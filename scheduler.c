@@ -27,7 +27,9 @@ void fcfs(Process *processes, int num_process) {
     qsort(processes_copy, num_process, sizeof(Process), compare_by_arrival);
 
     Queue ready_queue;
+    Queue wait_queue;
     init_queue(&ready_queue);
+    init_queue(&wait_queue);
     for (int i=0; i < num_process; i++) {
         enqueue(&ready_queue, &processes_copy[i]);
     }
@@ -207,6 +209,7 @@ void pre_sjf(Process *processes, int num_process) {
             // bool is_preempted=false;
             
             for (int i=0; i<num_process; i++) {
+
                 if (processes_copy[i].arrival_time > current_time){
                     continue;
                 }
@@ -235,6 +238,7 @@ void pre_sjf(Process *processes, int num_process) {
             curr_p->remaining_time--;
             executed_timeline[current_time]=curr_p;
 
+            current_time++;
             if (curr_p->remaining_time==0) {
 
                 num_completed++;
@@ -244,8 +248,6 @@ void pre_sjf(Process *processes, int num_process) {
                 curr_p->turnaround_time=curr_p->complete_time-curr_p->arrival_time;
                 curr_p->waiting_time=curr_p->turnaround_time-curr_p->cpu_burst_time;
             }
-
-            current_time++;
 
     
         }
@@ -349,6 +351,8 @@ void pre_priority(Process *processes, int num_process) {
 
             curr_p->remaining_time--;
             executed_timeline[current_time]=curr_p;
+            
+            current_time++;
 
             if (curr_p->remaining_time==0) {
 
@@ -359,9 +363,6 @@ void pre_priority(Process *processes, int num_process) {
                 curr_p->turnaround_time=curr_p->complete_time-curr_p->arrival_time;
                 curr_p->waiting_time=curr_p->turnaround_time-curr_p->cpu_burst_time;
             }
-
-            current_time++;
-
     
         }
 
@@ -404,12 +405,16 @@ void round_robin(Process *processes, int num_process) {
         
         // ==
         for (int i=0; i<num_process; i++) {
-            if (processes_copy[i].arrival_time == current_time ) {
+            if (processes_copy[i].arrival_time == current_time) {
+                if (is_full(&ready_queue)) {
+                    printf("full");
+                }
                 enqueue(&ready_queue, &processes_copy[i]);
             }
         }
 
         if (is_empty(&ready_queue)) {
+            printf("empty");
             executed_timeline[current_time]=NULL;
             current_time++;
             continue;
@@ -431,12 +436,15 @@ void round_robin(Process *processes, int num_process) {
             // ==
             for (int i = 0; i < num_process; i++) {
                 if (processes_copy[i].arrival_time == current_time) {
+                    if (is_full(&ready_queue)) {
+                        printf("full");
+                    }
                     enqueue(&ready_queue, &processes_copy[i]);
                 }
             }
         }
 
-        if (curr_p->remaining_time==0){
+        if (curr_p->remaining_time==0 && !curr_p->is_completed){
 
             num_completed++;
             curr_p->is_completed=true;
@@ -445,6 +453,9 @@ void round_robin(Process *processes, int num_process) {
             curr_p->waiting_time=curr_p->turnaround_time-curr_p->cpu_burst_time;
         }
         else {
+            // if (is_full(&ready_queue)){
+            //     printf("full");
+            // }
             enqueue(&ready_queue,curr_p);
         }
 

@@ -11,6 +11,14 @@ void create_process(Process *processes, int num_process, int seed) {
         processes[i].arrival_time = rand() % 6;
         processes[i].cpu_burst_time = rand() % 20 + 1;
         processes[i].remaining_time = processes[i].cpu_burst_time;
+        // 10% 확률로 I/O 발생
+        // if ((rand() % 100) < 10) {  
+        //     processes[i].io_start_time = rand() % (processes[i].cpu_burst_time - 1) + 1;  // 최소 1틱은 CPU 돌고 나서
+        //     processes[i].io_burst_time = rand() % MAX_IO_BURST_TIME;
+        // } else {
+        //     processes[i].io_start_time = -1;
+        //     processes[i].io_burst_time = 0;
+        // }
         processes[i].priority = rand () % num_process + 1;
         processes[i].is_completed = false;
     }

@@ -3,11 +3,10 @@
 
 #include <stdbool.h>
 #include "process.h"
-
-#define MAX_QUEUE_SIZE 10
+#include "constants.h"
 
 typedef struct {
-    Process *queue[MAX_QUEUE_SIZE];
+    Process *queue[NUM_PROCESS];
     int front;
     int rear;
     int size;

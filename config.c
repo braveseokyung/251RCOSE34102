@@ -16,7 +16,7 @@ void enqueue(Queue *q, Process *element) {
         printf("Queue is full!");
         return;
     }
-    q->rear = (q->rear + 1) % MAX_QUEUE_SIZE;
+    q->rear = (q->rear + 1) % NUM_PROCESS;
     q->queue[q->rear]=element;
     q->size++;
     printf("Enqueued PID %d at position %d\n", element->pid, q->rear);
@@ -30,7 +30,7 @@ Process* dequeue(Queue *q) {
     Process *p = q->queue[q->front];
     printf("Dequeued PID %d at position %d\n", p->pid, q->front);
 
-    q->front=(q->front+1) % MAX_QUEUE_SIZE;
+    q->front=(q->front+1) % NUM_PROCESS;
     q->size--;
    
     
@@ -43,14 +43,14 @@ bool is_empty(Queue *q) {
 }
 
 bool is_full(Queue *q) {
-    return q->size==MAX_QUEUE_SIZE;
+    return q->size==NUM_PROCESS;
 }
 
 void print_queue(Queue *q, const char *name) { 
     printf("Printing %s queue...\n", name);
     printf("Queue size : %d\n", q->size);
     for (int i=0; i < q->size; i++) {
-        int idx = (q->front + i) % MAX_QUEUE_SIZE;
+        int idx = (q->front + i) % NUM_PROCESS;
         printf("PID %d |", q->queue[idx]->pid);
     }
     printf("\n");
