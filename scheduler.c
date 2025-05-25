@@ -28,7 +28,7 @@ void fcfs(Process *processes, int num_process) {
 
     Queue ready_queue;
     init_queue(&ready_queue);
-    for (int i=0; i < 5; i++) {
+    for (int i=0; i < num_process; i++) {
         enqueue(&ready_queue, &processes_copy[i]);
     }
 
@@ -385,5 +385,91 @@ void pre_priority(Process *processes, int num_process) {
     
         // 성능 분석
         evaluate(processes_copy, num_process, "Preemptive Priority");
+
+}
+
+void round_robin(Process *processes, int num_process) {
+    Process processes_copy[MAX_PROCESS];
+    memcpy(processes_copy, processes, sizeof(Process) * num_process);
+    
+    Process *executed_timeline[MAX_TIME];
+
+    int current_time=0;
+    int num_completed=0;
+
+    Queue ready_queue;
+    init_queue(&ready_queue);
+
+    while(num_completed < num_process ) {
+        
+        // ==
+        for (int i=0; i<num_process; i++) {
+            if (processes_copy[i].arrival_time == current_time ) {
+                enqueue(&ready_queue, &processes_copy[i]);
+            }
+        }
+
+        if (is_empty(&ready_queue)) {
+            executed_timeline[current_time]=NULL;
+            current_time++;
+            continue;
+        }
+
+        Process *curr_p = dequeue(&ready_queue);
+
+        if (curr_p->remaining_time == curr_p->cpu_burst_time) {
+            curr_p->start_time = current_time;
+        }
+
+        int time_quantum=TIME_QUANTUM;
+        while(time_quantum>0 && curr_p->remaining_time>0){
+            executed_timeline[current_time]=curr_p;
+            time_quantum--;
+            curr_p->remaining_time--;
+            current_time++;
+
+            // ==
+            for (int i = 0; i < num_process; i++) {
+                if (processes_copy[i].arrival_time == current_time) {
+                    enqueue(&ready_queue, &processes_copy[i]);
+                }
+            }
+        }
+
+        if (curr_p->remaining_time==0){
+
+            num_completed++;
+            curr_p->is_completed=true;
+            curr_p->complete_time=current_time;
+            curr_p->turnaround_time=curr_p->complete_time-curr_p->arrival_time;
+            curr_p->waiting_time=curr_p->turnaround_time-curr_p->cpu_burst_time;
+        }
+        else {
+            enqueue(&ready_queue,curr_p);
+        }
+
+    }
+
+    printf("Round Robin Gantt Chart:\n| ");
+
+        for (int i = 0; i < current_time; i++) {
+            if (i == 0 || executed_timeline[i] != executed_timeline[i - 1]) {
+                if (executed_timeline[i] == NULL) {
+                    printf("IDLE (%d~", i);
+                } else {
+                    printf("PID %d (%d~", executed_timeline[i]->pid, i);
+                }
+            }
+
+            if (i == current_time - 1 || executed_timeline[i] != executed_timeline[i + 1]) {
+                printf("%d) | ", i + 1);
+            }
+        }
+
+        printf("\n");
+    
+        // 성능 분석
+        evaluate(processes_copy, num_process, "Round Robin");
+
 
 }

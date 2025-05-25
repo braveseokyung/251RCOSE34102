@@ -13,6 +13,7 @@ typedef struct {
     int io_burst_time;
     int io_request_time;
     int priority;
+    // int time_quantum;
 
     int start_time;
     int waiting_time;
