@@ -394,6 +394,7 @@ void round_robin(Process *processes, int num_process) {
     memcpy(processes_copy, processes, sizeof(Process) * num_process);
     
     Process *executed_timeline[MAX_TIME];
+    bool enqueued[MAX_PROCESS] = { false };
 
     int current_time=0;
     int num_completed=0;
@@ -405,11 +406,12 @@ void round_robin(Process *processes, int num_process) {
         
         // ==
         for (int i=0; i<num_process; i++) {
-            if (processes_copy[i].arrival_time == current_time) {
+            if (processes_copy[i].arrival_time == current_time &&!enqueued[i]) {
                 if (is_full(&ready_queue)) {
                     printf("full");
                 }
                 enqueue(&ready_queue, &processes_copy[i]);
+                enqueued[i]=true;
             }
         }
 
@@ -431,7 +433,7 @@ void round_robin(Process *processes, int num_process) {
             executed_timeline[current_time]=curr_p;
             time_quantum--;
             curr_p->remaining_time--;
-            current_time++;
+            // current_time++;
 
             // ==
             for (int i = 0; i < num_process; i++) {
@@ -440,9 +442,14 @@ void round_robin(Process *processes, int num_process) {
                         printf("full");
                     }
                     enqueue(&ready_queue, &processes_copy[i]);
+                    enqueued[i]=true;
                 }
             }
+
+            current_time++;
         }
+
+        // current_time++;
 
         if (curr_p->remaining_time==0 && !curr_p->is_completed){
 
@@ -457,11 +464,17 @@ void round_robin(Process *processes, int num_process) {
             //     printf("full");
             // }
             enqueue(&ready_queue,curr_p);
+            // current_time++;
         }
+
+        // current_time++;
 
     }
 
+    // printf("%d",current_time);
+
     printf("Round Robin Gantt Chart:\n| ");
+    
 
         for (int i = 0; i < current_time; i++) {
             if (i == 0 || executed_timeline[i] != executed_timeline[i - 1]) {
