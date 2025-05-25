@@ -13,6 +13,11 @@ typedef struct {
     int io_request_time;
     int priority;
 
+    int start_time;
+    int waiting_time;
+    int complete_time;
+    int turnaround_time;
+
     bool is_completed;
 } Process;
 

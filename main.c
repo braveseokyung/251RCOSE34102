@@ -2,24 +2,28 @@
 #include <stdlib.h>
 #include "process.h"
 #include "config.h"
+#include "constants.h"
+#include "scheduler.h"
 
 int main() {
 
-    Process processes[5];
+    Process processes[MAX_PROCESS];
     Queue ready_queue;
 
-    create_process(processes, 5, 42);
-    init_queue(&ready_queue);
+    create_process(processes, NUM_PROCESS, 42);
 
-    for (int i=0; i < 5; i++) {
-        enqueue(&ready_queue, &processes[i]);
-    }
+    fcfs(processes,NUM_PROCESS);
+    // init_queue(&ready_queue);
 
-    print_queue(&ready_queue, "Ready");
+    // for (int i=0; i < 5; i++) {
+    //     enqueue(&ready_queue, &processes[i]);
+    // }
 
-    Process *p = dequeue(&ready_queue);
+    // print_queue(&ready_queue, "Ready");
 
-    print_queue(&ready_queue, "Ready");
+    // Process *p = dequeue(&ready_queue);
+
+    // print_queue(&ready_queue, "Ready");
 
     return 0;
 }
