@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "process.h"
+#include "constants.h"
 
 void create_process(Process *processes, int num_process, int seed) {
     srand(seed);
@@ -10,6 +11,7 @@ void create_process(Process *processes, int num_process, int seed) {
         processes[i].arrival_time = rand() % 6;
         processes[i].cpu_burst_time = rand() % 20 + 1;
         processes[i].priority = rand () % num_process + 1;
+        processes[i].is_completed = false;
     }
 
     printf("%d processes created.\n",num_process);
