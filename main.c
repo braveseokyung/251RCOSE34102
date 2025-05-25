@@ -13,7 +13,8 @@ int main() {
     create_process(processes, NUM_PROCESS, 42);
 
     // fcfs(processes,NUM_PROCESS);
-    nonpre_sjf(processes,NUM_PROCESS);
+    // nonpre_sjf(processes,NUM_PROCESS);
+    nonpre_priority(processes,NUM_PROCESS);
     // init_queue(&ready_queue);
 
     // for (int i=0; i < 5; i++) {

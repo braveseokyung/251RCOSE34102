@@ -119,3 +119,65 @@ void nonpre_sjf(Process *processes, int num_process) {
     evaluate(processes_copy, num_process, "Non-preemptive SJF");
 
 }
+
+void nonpre_priority(Process *processes, int num_process) {
+
+    // 복사
+    Process processes_copy[MAX_PROCESS];
+    memcpy(processes_copy, processes, sizeof(Process)*num_process);
+
+    // 실행순서 저장
+    Process *processes_executed[MAX_PROCESS];
+
+    // arrival 기준으로 정렬
+    qsort(processes_copy, num_process, sizeof(Process), compare_by_arrival);
+
+    int current_time=0;
+    int num_completed=0;
+
+    while(num_completed < num_process){
+
+        int min_priority_idx=-1;
+        int min_priority=num_process+1;
+        
+        for (int i=0; i<num_process; i++) {
+            if (processes_copy[i].arrival_time > current_time){
+                break;
+            }
+
+            if(!processes_copy[i].is_completed && processes_copy[i].priority < min_priority) {
+
+                min_priority = processes_copy[i].priority;
+                min_priority_idx=i;
+                
+            }
+
+        }
+
+        if (min_priority_idx==-1) {
+            current_time++;
+            continue;
+        }
+
+        processes_copy[min_priority_idx].start_time=current_time;
+        current_time+=processes_copy[min_priority_idx].cpu_burst_time;
+        processes_copy[min_priority_idx].complete_time=current_time;
+        processes_copy[min_priority_idx].turnaround_time=processes_copy[min_priority_idx].complete_time-processes_copy[min_priority_idx].arrival_time;
+        processes_copy[min_priority_idx].is_completed=true;
+
+        processes_executed[num_completed]=&processes_copy[min_priority_idx];
+        num_completed++;
+
+    }
+
+    // 간트 차트
+    printf("Non-preemptive Priority Gantt Chart:\n");
+    for (int i=0; i<num_process; i++) {
+        printf("PID %d (%d~%d) | ", processes_executed[i]->pid, processes_executed[i]->start_time, processes_executed[i]->complete_time);
+    }
+    printf("\n");
+
+    // 성능 분석
+    evaluate(processes_copy, num_process, "Non-preemptive Priority");
+
+}
