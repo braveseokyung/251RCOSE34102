@@ -215,14 +215,6 @@ void pre_sjf(Process *processes, int num_process) {
     
                     min_remaining_time = processes_copy[i].remaining_time;
                     min_remain_idx=i;
-
-                    // if (min_remain_idx!=i) {
-                    //     is_preempted=true;
-                    //     min_remain_idx=i;
-                    //     order++;
-                    // }
-
-                    // processes_copy[i].remaining_time--;
                     
                 }
     
@@ -300,5 +292,98 @@ void pre_sjf(Process *processes, int num_process) {
     
         // 성능 분석
         evaluate(processes_copy, num_process, "Preemptive SJF");
+
+}
+
+void pre_priority(Process *processes, int num_process) {
+
+        // 복사
+        Process processes_copy[MAX_PROCESS];
+        memcpy(processes_copy, processes, sizeof(Process)*num_process);
+    
+        // 시간별 실행된 프로세스 저장
+        Process *executed_timeline[MAX_TIME];
+    
+        int current_time=0;
+        int num_completed=0;
+    
+        while(num_completed < num_process){
+
+            if (current_time >= MAX_TIME*10) {
+                printf("ERROR: current_time exceeded MAX_TIME (%d)\n", MAX_TIME*10);
+                exit(1);  // 또는 break;
+            }
+    
+            int min_priority_idx=-1;
+            int min_priority=num_process+1;
+            // bool is_preempted=false;
+            
+            for (int i=0; i<num_process; i++) {
+                if (processes_copy[i].arrival_time > current_time){
+                    continue;
+                }
+    
+                // 현재 시점에서 priority가 작은 것 선택, 만약에 같다면 먼저 도착한 것으로
+                if(!processes_copy[i].is_completed && (processes_copy[i].priority < min_priority ||
+                    (processes_copy[i].priority == min_priority &&
+                     processes_copy[i].arrival_time < processes_copy[min_priority_idx].arrival_time))) {
+    
+                    min_priority = processes_copy[i].priority;
+                    min_priority_idx=i;
+                    
+                }
+    
+            }
+
+            if (min_priority_idx==-1) {
+                executed_timeline[current_time]=NULL;
+                current_time++;
+                continue;
+            } 
+
+            Process *curr_p=&processes_copy[min_priority_idx];
+            
+            if (curr_p->remaining_time==curr_p->cpu_burst_time) {
+                curr_p->start_time=current_time;
+            }
+
+            curr_p->remaining_time--;
+            executed_timeline[current_time]=curr_p;
+
+            if (curr_p->remaining_time==0) {
+
+                num_completed++;
+
+                curr_p->is_completed=true;
+                curr_p->complete_time=current_time;
+                curr_p->turnaround_time=curr_p->complete_time-curr_p->arrival_time;
+                curr_p->waiting_time=curr_p->turnaround_time-curr_p->cpu_burst_time;
+            }
+
+            current_time++;
+
+    
+        }
+
+        printf("Preemptive Priority Gantt Chart:\n| ");
+
+        for (int i = 0; i < current_time; i++) {
+            if (i == 0 || executed_timeline[i] != executed_timeline[i - 1]) {
+                if (executed_timeline[i] == NULL) {
+                    printf("IDLE (%d~", i);
+                } else {
+                    printf("PID %d (%d~", executed_timeline[i]->pid, i);
+                }
+            }
+
+            if (i == current_time - 1 || executed_timeline[i] != executed_timeline[i + 1]) {
+                printf("%d) | ", i + 1);
+            }
+        }
+
+        printf("\n");
+    
+        // 성능 분석
+        evaluate(processes_copy, num_process, "Preemptive Priority");
 
 }
