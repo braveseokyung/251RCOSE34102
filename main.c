@@ -10,7 +10,7 @@ int main() {
     Process processes[MAX_PROCESS];
     Queue ready_queue;
 
-    create_process(processes, NUM_PROCESS, 3);
+    create_process(processes, NUM_PROCESS, 1);
 
     fcfs(processes,NUM_PROCESS);
     nonpre_sjf(processes,NUM_PROCESS);

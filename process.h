@@ -12,6 +12,7 @@ typedef struct {
     int remaining_time;
     int io_start_time;
     int io_burst_time;
+    int io_remaining_time;
     int priority;
     // int time_quantum;
 
@@ -20,6 +21,8 @@ typedef struct {
     int complete_time;
     int turnaround_time;
 
+    // bool in_ready;
+    // bool in_io;
     bool is_completed;
 } Process;
 

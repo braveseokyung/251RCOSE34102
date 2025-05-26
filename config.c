@@ -19,7 +19,7 @@ void enqueue(Queue *q, Process *element) {
     q->rear = (q->rear + 1) % NUM_PROCESS;
     q->queue[q->rear]=element;
     q->size++;
-    printf("Enqueued PID %d at position %d\n", element->pid, q->rear);
+    // printf("Enqueued PID %d at position %d\n", element->pid, q->rear);
 }
 
 Process* dequeue(Queue *q) {
@@ -28,7 +28,7 @@ Process* dequeue(Queue *q) {
         return NULL;
     }
     Process *p = q->queue[q->front];
-    printf("Dequeued PID %d at position %d\n", p->pid, q->front);
+    // printf("Dequeued PID %d at position %d\n", p->pid, q->front);
 
     q->front=(q->front+1) % NUM_PROCESS;
     q->size--;
